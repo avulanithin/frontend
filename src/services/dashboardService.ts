@@ -1,8 +1,16 @@
 import axios from "axios";
 
-const API_BASE = "http://127.0.0.1:8000";
+export async function fetchDailySummary() {
+  const token = localStorage.getItem("jwt");
 
-export const fetchDailySummary = async () => {
-  const res = await axios.get(`${API_BASE}/dashboard/daily-summary`);
+  const res = await axios.get(
+    "http://127.0.0.1:8000/dashboard/daily-summary",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
   return res.data;
-};
+}
