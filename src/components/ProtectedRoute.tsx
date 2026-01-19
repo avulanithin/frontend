@@ -1,11 +1,16 @@
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 
-export default function ProtectedRoute({
-  children,
-}: {
+type Props = {
   children: ReactNode;
-}) {
+};
+
+export default function ProtectedRoute({ children }: Props) {
   const token = localStorage.getItem("jwt");
-  return token ? <>{children}</> : <Navigate to="/" replace />;
+
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
 }

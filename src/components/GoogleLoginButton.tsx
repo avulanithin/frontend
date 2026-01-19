@@ -1,20 +1,33 @@
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const GoogleLoginButton = () => {
+  const navigate = useNavigate();
+
   return (
     <GoogleLogin
       onSuccess={async (credentialResponse) => {
-        const token = credentialResponse.credential;
+        try {
+          const token = credentialResponse.credential;
 
-        const res = await axios.post("http://localhost:8000/auth/google", {
-          token,
-        });
+          const res = await axios.post(
+            "http://localhost:8000/auth/google",
+            { token }
+          );
 
-        localStorage.setItem("access_token", res.data.access_token);
+          // ✅ store JWT
+          localStorage.setItem("access_token", res.data.access_token);
+
+          // ✅ redirect to dashboard
+          navigate("/dashboard");
+        } catch (err) {
+          alert("Login failed at backend");
+          console.error(err);
+        }
       }}
       onError={() => {
-        console.error("Google Login Failed");
+        alert("Google login failed");
       }}
     />
   );
